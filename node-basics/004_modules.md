@@ -20,24 +20,108 @@ Is a standard for how modules should be structured.
 
 Here we will create a greet module
 
-
+- Create a folder for your module (Let's say greet)
+- Add a `index.js` file inside the `greet` folder which will require all the modules in that folder
+- create greetings files (`english.js`, `kapampangan.js`)
 
 ```javascript
-// greet.js
+// greet/english.js
 
 var greet = function(){
- console.log('Hi there!'); 
+ console.log('How are you?'); 
+};
+module.exports = greet;
+```
+
+```javascript
+// greet/kapampangan.js
+
+var greet = function(){
+ console.log('Komusta naka?'); 
 };
 
 modules.exports = { greet };
 ```
 
+```javascript
+// greet/index.js
+
+var english = require('./english');
+var kapampangan = require('./kapampangan');
+module.exports = { 
+	'english': english,
+  	'kapampangan': kapampangan
+};
+```
+
+
+
 Invoking the greet module in another file
 
 ```javascript
 // app.js
-var greet = require('./greet.js');
+var greet = require('./greet');
+greet.english();
+greet.kapampangan();
+// This will print out:
+// How are you?
+// Komusta naka?
 ```
+
+
+
+### The module patterns
+
+These are the module patterns in order of preference.
+
+1. ```javascript
+   // reveal only the one that needs to be revealed
+   /* Revealing module pattern */
+   module.exports = {
+     greet: greet
+   }
+   ```
+
+2. `module.exports = Greetr;`
+
+3. ```javascript
+   // useful for singleton
+   module.exports = new Greetr();
+   ```
+
+4. `module.exports = {}`
+
+5. `module.exports.greet`
+
+
+
+### How do you require native/core modules?
+
+#### Using the utilities module
+
+```javascript
+var util = require('util');
+console.log(util.isArray([]));
+util.log(util.format('Hello %s', 'Chris'));
+```
+
+
+
+### ECMAScript 2015/ES6 Modules
+
+```javascript
+// greet.js
+export function greet(){
+  console.log('Hello!');
+}
+
+// app.js
+import * as greeter from 'greet';
+greeter.greet();
+
+```
+
+
 
 
 
@@ -70,6 +154,12 @@ return module.exports;
 As we can see the return value is anything inside `module.exports`
 
 
+
+### `exports` vs `module.exports`
+
+As we can see above the first parameter is the `module.exports` meaning `exports` is a short-hand for `module.exports`. But it is not recommended since what is returned is `module.exports`. Why? It does not work with the patterns noted above:  #2 and #4.
+
+In sort **JUST USE `module.exports`**
 
 
 
@@ -199,6 +289,30 @@ var firstName = 'Jenny';
 })();
 
 console.log(firstName);
+```
+
+
+
+### JSON
+
+A way of writing data in text, so that other systems can understand your data
+
+
+
+```json
+// languages.json
+{
+  'en': 'How are you?',
+  'ka': 'Komusta naka?'
+}
+```
+
+
+
+You can also require `.json` files
+
+```javascript
+var json = require('./languages.json');
 ```
 
 
