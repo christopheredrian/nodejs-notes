@@ -144,9 +144,7 @@ var zlib = require('zlib');
 var gzip = zlib.createGzip();
 
 var readable = fs.createReadStream(__dirname + '/bigfile.txt');
-var writable = fs.createWriteStream(__dirname + '/bigfile_copy.txt');
 var compressed = fs.createWriteStream(__dirname + '/bigfile_copy.txt.gz');
-readable.pipe(writable);
 // Chaining pipes
 readable.pipe(gzip).pipe(compressed);
 
